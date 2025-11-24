@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'Nunito';
   src: url(/fonts/nunito/Nunito/static/Nunito-Regular.ttf) ;
-  
+
 }
 
 @import "tailwindcss";
@@ -52,7 +52,7 @@
 
 :root {
   --radius: 0.625rem;
-  
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
