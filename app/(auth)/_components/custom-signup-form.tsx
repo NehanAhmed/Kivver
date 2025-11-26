@@ -56,35 +56,35 @@ export default function CustomSignUpForm({ role }: CustomSignUpFormProps) {
 
   // Step 2: Verify Email & Redirect
   const onVerify = async (data: FormData) => {
-    if (!isLoaded || !data.code) return;
-    setError(null);
+  if (!isLoaded) return;
 
-    try {
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code: data.code,
-      });
+  // Validate verification code
+  if (!data.code || data.code.trim() === '') {
+    setError('Please enter the verification code');
+    return;
+  }
 
-      if (completeSignUp.status === 'complete') {
-        // ACTIVATE SESSION
-        await setActive({ session: completeSignUp.createdSessionId });
+  setError(null);
 
-        // UPDATE METADATA (Role)
-        // Note: For highest security, do this in a webhook. 
-        // For simple integration, update user sends this, but we validate strictly.
-        const user = completeSignUp.createdUserId;
-        // In client-side flow, we usually rely on the unsafeMetadata passed during creation 
-        // or update it now. Clerk "update" on client is restricted. 
-        // TIP: Better to pass unsafeMetadata during create(). Let's refactor the create step below.
-        
-        const redirectUrl = role === 'seller' ? '/teacher/dashboard' : '/dashboard';
-        router.push(redirectUrl);
-      } else {
-        setError('Verification incomplete. Please contact support.');
-      }
-    } catch (err: any) {
-      setError(err.errors?.[0]?.message || 'Invalid code');
+  try {
+    const completeSignUp = await signUp.attemptEmailAddressVerification({
+      code: data.code,
+    });
+
+    if (completeSignUp.status === 'complete') {
+      // Activate session
+      await setActive({ session: completeSignUp.createdSessionId });
+
+      // Redirect based on role
+      const redirectUrl = role === 'seller' ? '/teacher' : '/dashboard';
+      router.push(redirectUrl);
+    } else {
+      setError('Verification incomplete. Please contact support.');
     }
-  };
+  } catch (err: any) {
+    setError(err.errors?.[0]?.message || 'Invalid code');
+  }
+};
 
   // Refactored Create with Metadata
   const onSignUpWithRole = async (data: FormData) => {
