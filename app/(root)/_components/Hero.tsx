@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export function Hero() {
     return (
@@ -27,15 +28,17 @@ export function Hero() {
 
                         {/* CTA Buttons */}
                         <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                            <Button 
-                                size="lg" 
-                                className="bg-green-500 hover:bg-green-600 text-white font-semibold text-base px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-                            >
-                                Start Learning Now
-                            </Button>
-                            <Button 
-                                size="lg" 
-                                variant="outline" 
+                            <Link href='/join'>
+                                <Button
+                                    size="lg"
+                                    className="bg-green-500 hover:bg-green-600 text-white font-semibold text-base px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                                >
+                                    Start Learning Now
+                                </Button>
+                            </Link>
+                            <Button
+                                size="lg"
+                                variant="outline"
                                 className="border-2 border-green-500 text-green-600 hover:bg-green-50 font-semibold text-base px-8 py-6 rounded-xl transition-all duration-200"
                             >
                                 <Play className="w-5 h-5 mr-2 fill-current" />
@@ -47,9 +50,9 @@ export function Hero() {
                         <div className="flex items-center gap-5 pt-6">
                             <div className="flex -space-x-3">
                                 {[1, 2, 3, 4].map((i) => (
-                                    <div 
-                                        key={i} 
-                                        className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-blue-500 border-3 border-white shadow-md" 
+                                    <div
+                                        key={i}
+                                        className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-blue-500 border-3 border-white shadow-md"
                                     />
                                 ))}
                             </div>
@@ -63,7 +66,7 @@ export function Hero() {
                     <div className="relative mt-12 lg:mt-0">
                         {/* Background Blur Effect */}
                         <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-3xl blur-3xl opacity-20 -z-10"></div>
-                        
+
                         {/* Main Image */}
                         <div className="relative">
                             <img

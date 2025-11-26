@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 
 import { Sparkles } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export function CTA() {
   return (
@@ -20,12 +21,16 @@ export function CTA() {
               Join millions of learners around the world. Start with our free lessons and upgrade anytime to unlock premium features.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button size="lg" className="bg-white text-green-600 hover:bg-green-50 text-lg py-6 px-8">
-                Get Started Free
-              </Button>
-              <Button size="lg" variant="outline" className="border-2 text-lg py-6 px-8 text-black">
-                View Plans
-              </Button>
+              <Link href='/join'>
+                <Button size="lg" className="bg-white text-green-600 hover:bg-green-50 text-lg py-6 px-8">
+                  Get Started Free
+                </Button>
+              </Link>
+              <Link href='/pricing'>
+                <Button size="lg" variant="outline" className="border-2 text-lg py-6 px-8 text-black">
+                  View Plans
+                </Button>
+              </Link>
             </div>
             <div className="flex items-center gap-6 pt-4">
               <div className="flex items-center gap-2">

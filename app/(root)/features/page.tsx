@@ -2,12 +2,13 @@
 // FILE: app/how-it-works/page.tsx
 // =============================================
 import React from 'react';
-import { 
-    Target, Trophy, Zap, TrendingUp, Download, Users, 
+import {
+    Target, Trophy, Zap, TrendingUp, Download, Users,
     BookOpen, Sparkles, Award, Flame, MousePointerClick,
     Calendar, Globe, Brain, Star, CheckCircle, Rocket,
     Shield, Clock, Smartphone
 } from 'lucide-react';
+import Link from 'next/link';
 
 const HowItWorksPage = () => {
     return (
@@ -19,7 +20,7 @@ const HowItWorksPage = () => {
                         <Sparkles className="w-4 h-4" />
                         <span>Learn Smarter, Not Harder</span>
                     </div>
-                    
+
                     <h1 className="text-6xl font-bold mb-6">
                         How It Works
                     </h1>
@@ -28,9 +29,11 @@ const HowItWorksPage = () => {
                     </p>
 
                     <div className="flex items-center justify-center gap-4">
-                        <button className="bg-white text-green-600 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105">
-                            Get Started Free
-                        </button>
+                        <Link href='/join'>
+                            <button className="bg-white text-green-600 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105">
+                                Get Started Free
+                            </button>
+                        </Link>
                         <button className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/10 transition-all">
                             Watch Demo
                         </button>
@@ -416,9 +419,11 @@ const HowItWorksPage = () => {
                         Join 125,000+ learners already mastering new skills
                     </p>
                     <div className="flex items-center justify-center gap-4">
-                        <button className="bg-white text-green-600 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105">
-                            Start Learning Free
-                        </button>
+                        <Link href='/join'>
+                            <button className="bg-white text-green-600 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105">
+                                Start Learning Free
+                            </button>
+                        </Link>
                         <button className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/10 transition-all">
                             Explore Courses
                         </button>
