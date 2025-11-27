@@ -37,9 +37,9 @@ export default clerkMiddleware(async (auth, req) => {
   const { userId, sessionClaims } = await auth();
   
   // Get role from unsafe_metadata (set during signup)
-  const role = sessionClaims?.unsafeMetadata?.role as string | undefined;
+  const role = (sessionClaims?.unsafeMetadata as { role?: string })?.role;
 
-  // 1. Redirect logged-in users away from auth pages
+  // 1. Redirect logged-in users away from auth pages to their correct dashboard
   if (userId && isAuthPage(req)) {
     if (role === 'seller') {
       return NextResponse.redirect(new URL('/seller/dashboard', req.url));
@@ -48,7 +48,7 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
-  // 2. Protect private routes
+  // 2. Protect private routes - redirect to login if not authenticated
   if (!userId && !isPublicRoute(req)) {
     return (await auth()).redirectToSignIn();
   }
@@ -61,7 +61,7 @@ export default clerkMiddleware(async (auth, req) => {
     }
 
     // Prevent sellers from accessing user dashboard (optional)
-    // Remove this if sellers should access both dashboards
+    // Remove this block if sellers should access both dashboards
     if (isDashboardRoute(req) && role === 'seller') {
       return NextResponse.redirect(new URL('/seller/dashboard', req.url));
     }
