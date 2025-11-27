@@ -10,8 +10,7 @@ const isPublicRoute = createRouteMatcher([
   '/pricing',
   '/explore',
   '/features',
-  '/for-teachers',
-  '/api/webhooks(.*)', // Allow webhook endpoint
+  '/for-teachers'
 ]);
 
 // Pages that logged-in users should NOT access
@@ -24,28 +23,21 @@ const isAuthPage = createRouteMatcher([
   '/for-sellers/join(.*)'
 ]);
 
-const isSellerRoute = createRouteMatcher([
-  '/seller(.*)',
-  '/teacher(.*)',
-]);
-
-const isDashboardRoute = createRouteMatcher([
-  '/dashboard(.*)',
-]);
+const isTeacherRoute = createRouteMatcher(['/for-sellers(.*)']);
+const isBuyerRoute = createRouteMatcher(['/join', '/login']);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId, sessionClaims } = await auth();
-  
-  // Get role from unsafe_metadata (set during signup)
-  const role = sessionClaims?.unsafeMetadata?.role as string | undefined;
+  const role = sessionClaims?.metadata?.role;
 
-  // 1. Redirect logged-in users away from auth pages
+  // 1. Redirect logged-in users only when they hit AUTH PAGES
   if (userId && isAuthPage(req)) {
     if (role === 'seller') {
       return NextResponse.redirect(new URL('/seller/dashboard', req.url));
     }
-    // Default to user dashboard
-    return NextResponse.redirect(new URL('/dashboard', req.url));
+    if (role === 'buyer') {
+      return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
   }
 
   // 2. Protect private routes
@@ -53,21 +45,8 @@ export default clerkMiddleware(async (auth, req) => {
     return (await auth()).redirectToSignIn();
   }
 
-  // 3. Role-based route protection
-  if (userId) {
-    // Prevent users from accessing seller routes
-    if (isSellerRoute(req) && role !== 'seller') {
-      return NextResponse.redirect(new URL('/dashboard', req.url));
-    }
-
-    // Prevent sellers from accessing user dashboard (optional)
-    // Remove this if sellers should access both dashboards
-    if (isDashboardRoute(req) && role === 'seller') {
-      return NextResponse.redirect(new URL('/seller/dashboard', req.url));
-    }
-  }
-
-  return NextResponse.next();
+  // 3. Optional stricter separation (teacher vs buyer)
+  // Add here if needed.
 });
 
 export const config = {
