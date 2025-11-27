@@ -37,22 +37,28 @@ const ExplorePage = () => {
             </div>
 
             {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-6 py-8">
-                {/* Stats Section */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    {stats.map((stat, index) => (
-                        <StatsCard key={index} {...stat} />
-                    ))}
-                </div>
-
-                {/* Category Filter */}
-                <div className="mb-8">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">Browse by Category</h2>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {/* Category Filter with Suspense */}
+                <Suspense fallback={
+                    <div className="flex gap-3 overflow-x-auto pb-2 mb-8">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="h-10 w-24 bg-gray-200 rounded-full animate-pulse" />
+                        ))}
+                    </div>
+                }>
                     <CategoryFilter categories={categories} />
-                </div>
+                </Suspense>
 
-                {/* Course Grid with integrated search & category filtering */}
-                <CourseGrid />
+                {/* Course Grid with Suspense */}
+                <Suspense fallback={
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="bg-gray-100 rounded-2xl h-96 animate-pulse" />
+                        ))}
+                    </div>
+                }>
+                    <CourseGrid />
+                </Suspense>
             </div>
         </div>
     );
