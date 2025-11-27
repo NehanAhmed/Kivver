@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
-import { UserRole } from '@/types/global';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -42,18 +41,13 @@ export default function CustomSignInForm() {
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId });
         
-        // Logic to redirect based on metadata
-        // Note: The publicMetadata is available in the user object after signin
-        const role = result.userData.publicMetadata.role as UserRole | undefined;
-
-        if (role === 'seller') {
-          router.push('/teacher/dashboard');
-        } else {
-          router.push('/dashboard');
-        }
+        // Let middleware handle the redirect based on role
+        // Middleware will check unsafeMetadata.role and redirect accordingly
+        router.push('/dashboard');
       } else {
         // Handle MFA or other factors if needed
         console.log(result);
+        setError('Please complete additional verification steps');
       }
     } catch (err: any) {
       setError(err.errors?.[0]?.message || 'Invalid email or password');

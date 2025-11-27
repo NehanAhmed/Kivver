@@ -10,7 +10,8 @@ const isPublicRoute = createRouteMatcher([
   '/pricing',
   '/explore',
   '/features',
-  '/for-teachers'
+  '/for-teachers',
+  '/api/webhooks(.*)', // Allow webhook endpoint
 ]);
 
 // Pages that logged-in users should NOT access
@@ -23,30 +24,50 @@ const isAuthPage = createRouteMatcher([
   '/for-sellers/join(.*)'
 ]);
 
-const isTeacherRoute = createRouteMatcher(['/for-sellers(.*)']);
-const isBuyerRoute = createRouteMatcher(['/join', '/login']);
+const isSellerRoute = createRouteMatcher([
+  '/seller(.*)',
+  '/teacher(.*)',
+]);
+
+const isDashboardRoute = createRouteMatcher([
+  '/dashboard(.*)',
+]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId, sessionClaims } = await auth();
-  const role = sessionClaims?.metadata?.role;
+  
+  // Get role from unsafe_metadata (set during signup)
+  const role = (sessionClaims?.unsafeMetadata as { role?: string })?.role;
 
-  // 1. Redirect logged-in users only when they hit AUTH PAGES
+  // 1. Redirect logged-in users away from auth pages to their correct dashboard
   if (userId && isAuthPage(req)) {
     if (role === 'seller') {
       return NextResponse.redirect(new URL('/seller/dashboard', req.url));
     }
-    if (role === 'buyer') {
-      return NextResponse.redirect(new URL('/dashboard', req.url));
-    }
+    // Default to user dashboard
+    return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
-  // 2. Protect private routes
+  // 2. Protect private routes - redirect to login if not authenticated
   if (!userId && !isPublicRoute(req)) {
     return (await auth()).redirectToSignIn();
   }
 
-  // 3. Optional stricter separation (teacher vs buyer)
-  // Add here if needed.
+  // 3. Role-based route protection
+  if (userId) {
+    // Prevent users from accessing seller routes
+    if (isSellerRoute(req) && role !== 'seller') {
+      return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+
+    // Prevent sellers from accessing user dashboard (optional)
+    // Remove this block if sellers should access both dashboards
+    if (isDashboardRoute(req) && role === 'seller') {
+      return NextResponse.redirect(new URL('/seller/dashboard', req.url));
+    }
+  }
+
+  return NextResponse.next();
 });
 
 export const config = {
