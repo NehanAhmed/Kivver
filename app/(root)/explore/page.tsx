@@ -1,5 +1,5 @@
 'use client'
-import React, { Suspense } from 'react';
+import React from 'react';
 import { BookOpen, Trophy, Users, TrendingUp, Zap } from 'lucide-react';
 import { CategoryFilter } from '../_components/CategoryFilter';
 import { CourseGrid } from '../_components/CourseGrid';
@@ -48,15 +48,12 @@ const ExplorePage = () => {
                 {/* Category Filter */}
                 <div className="mb-8">
                     <h2 className="text-xl font-bold text-gray-900 mb-4">Browse by Category</h2>
-                    <Suspense fallback={<div>Loading filters...</div>}>
-                        <CategoryFilter categories={categories} />
-                    </Suspense>
+                    <CategoryFilter categories={categories} />
                 </div>
 
                 {/* Course Grid with integrated search & category filtering */}
-                <Suspense fallback={<div>Loading courses...</div>}>
-                    <CourseGrid />
-                </Suspense>            </div>
+                <CourseGrid />
+            </div>
         </div>
     );
 };
