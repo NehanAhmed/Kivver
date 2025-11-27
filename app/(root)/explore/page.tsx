@@ -39,7 +39,7 @@ const ExplorePage = () => {
             {/* Main Content */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Category Filter with Suspense */}
-                <Suspense fallback={
+                <Suspensed fallback={
                     <div className="flex gap-3 overflow-x-auto pb-2 mb-8">
                         {[...Array(6)].map((_, i) => (
                             <div key={i} className="h-10 w-24 bg-gray-200 rounded-full animate-pulse" />
@@ -47,7 +47,7 @@ const ExplorePage = () => {
                     </div>
                 }>
                     <CategoryFilter categories={categories} />
-                </Suspense>
+                </Suspensed>
 
                 {/* Course Grid with Suspense */}
                 <Suspense fallback={
