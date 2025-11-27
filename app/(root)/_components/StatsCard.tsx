@@ -1,21 +1,28 @@
-// File: components/ui/StatsCard.jsx
-export const StatsCard = ({ icon: Icon, label, value, color = "green" }) => {
-    const colorClasses = {
-        green: 'bg-green-50 text-green-600',
-        blue: 'bg-blue-100 text-blue-600',
-        purple: 'bg-purple-100 text-purple-600',
-        orange: 'bg-orange-100 text-orange-600'
-    };
+// File: app/(root)/_components/StatsCard.tsx
+import { LucideIcon } from 'lucide-react';
 
-    return (
-        <div className="flex items-center gap-4 bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-all">
-            <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${colorClasses[color]}`}>
-                <Icon className="w-7 h-7" />
-            </div>
-            <div>
-                <p className="text-gray-500 text-sm font-medium">{label}</p>
-                <p className="text-2xl font-bold text-gray-900">{value}</p>
-            </div>
-        </div>
-    );
+interface StatsCardProps {
+  icon: LucideIcon;
+  label: string;
+  value: string | number;
+  color?: 'green' | 'blue' | 'purple' | 'orange';
+}
+
+export const StatsCard = ({ icon: Icon, label, value, color = "green" }: StatsCardProps) => {
+  const colorClasses = {
+    green: 'bg-green-50 text-green-600',
+    blue: 'bg-blue-100 text-blue-600',
+    purple: 'bg-purple-100 text-purple-600',
+    orange: 'bg-orange-100 text-orange-600',
+  };
+
+  return (
+    <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+      <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg mb-4 ${colorClasses[color]}`}>
+        <Icon className="w-6 h-6" />
+      </div>
+      <div className="text-3xl font-bold text-gray-900 mb-1">{value}</div>
+      <div className="text-sm text-gray-600">{label}</div>
+    </div>
+  );
 };
