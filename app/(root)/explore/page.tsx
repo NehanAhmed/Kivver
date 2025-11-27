@@ -39,13 +39,26 @@ const ExplorePage = () => {
             {/* Main Content */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Category Filter with Suspense */}
-
-                <CategoryFilter categories={categories} />
+                <Suspense fallback={
+                    <div className="flex gap-3 overflow-x-auto pb-2 mb-8">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="h-10 w-24 bg-gray-200 rounded-full animate-pulse" />
+                        ))}
+                    </div>
+                }>
+                    <CategoryFilter categories={categories} />
+                </Suspense>
 
                 {/* Course Grid with Suspense */}
-
-                <CourseGrid />
-
+                <Suspense fallback={
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="bg-gray-100 rounded-2xl h-96 animate-pulse" />
+                        ))}
+                    </div>
+                }>
+                    <CourseGrid />
+                </Suspense>
             </div>
         </div>
     );
