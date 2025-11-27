@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, { Suspense } from 'react';
 import { BookOpen, Trophy, Users, TrendingUp, Zap } from 'lucide-react';
 import { CategoryFilter } from '../_components/CategoryFilter';
 import { CourseGrid } from '../_components/CourseGrid';
