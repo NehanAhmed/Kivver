@@ -6,9 +6,9 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button'; // Shadcn Button
+import { Input } from '@/components/ui/input';   // Shadcn Input
+import { Label } from '@/components/ui/label';   // Shadcn Label
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
 import { UserRole } from '@/types/global';
@@ -35,7 +35,7 @@ export default function CustomSignUpForm({ role }: CustomSignUpFormProps) {
     resolver: zodResolver(formSchema),
   });
 
-  // Step 1: Create User with Role
+  // Step 1: Create User
   const onSignUp = async (data: FormData) => {
     if (!isLoaded) return;
     setError(null);
@@ -44,11 +44,9 @@ export default function CustomSignUpForm({ role }: CustomSignUpFormProps) {
       await signUp.create({
         emailAddress: data.email,
         password: data.password,
-        // Store role in unsafeMetadata
-        unsafeMetadata: { role: role }, 
       });
 
-      // Prepare email verification
+      // Important: Prepare email verification
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
       setVerifying(true);
     } catch (err: any) {
@@ -56,35 +54,55 @@ export default function CustomSignUpForm({ role }: CustomSignUpFormProps) {
     }
   };
 
-  // Step 2: Verify Email & Let Middleware Handle Redirect
+  // Step 2: Verify Email & Redirect
   const onVerify = async (data: FormData) => {
-    if (!isLoaded) return;
+  if (!isLoaded) return;
 
-    // Validate verification code
-    if (!data.code || data.code.trim() === '') {
-      setError('Please enter the verification code');
-      return;
+  // Validate verification code
+  if (!data.code || data.code.trim() === '') {
+    setError('Please enter the verification code');
+    return;
+  }
+
+  setError(null);
+
+  try {
+    const completeSignUp = await signUp.attemptEmailAddressVerification({
+      code: data.code,
+    });
+
+    if (completeSignUp.status === 'complete') {
+      // Activate session
+      await setActive({ session: completeSignUp.createdSessionId });
+
+      // Redirect based on role
+      const redirectUrl = role === 'seller' ? '/teacher' : '/dashboard';
+      router.push(redirectUrl);
+    } else {
+      setError('Verification incomplete. Please contact support.');
     }
+  } catch (err: any) {
+    setError(err.errors?.[0]?.message || 'Invalid code');
+  }
+};
 
+  // Refactored Create with Metadata
+  const onSignUpWithRole = async (data: FormData) => {
+    if (!isLoaded) return;
     setError(null);
 
     try {
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code: data.code,
+      await signUp.create({
+        emailAddress: data.email,
+        password: data.password,
+        // Assign role here
+        unsafeMetadata: { role: role }, 
       });
 
-      if (completeSignUp.status === 'complete') {
-        // Activate session
-        await setActive({ session: completeSignUp.createdSessionId });
-
-        // Let middleware handle the redirect based on role
-        // Middleware will check unsafeMetadata.role and redirect accordingly
-        router.push('/dashboard');
-      } else {
-        setError('Verification incomplete. Please contact support.');
-      }
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+      setVerifying(true);
     } catch (err: any) {
-      setError(err.errors?.[0]?.message || 'Invalid code');
+      setError(err.errors?.[0]?.message || 'Something went wrong');
     }
   };
 
@@ -92,7 +110,7 @@ export default function CustomSignUpForm({ role }: CustomSignUpFormProps) {
     <div className="w-full max-w-md space-y-6 p-6 border rounded-lg shadow-sm">
       <div className="space-y-2 text-center">
         <h1 className="text-2xl font-bold">
-          {role === 'seller' ? 'Become a Teacher' : 'Join as a Learner'}
+          {role === 'seller' ? 'Become a Teacher' : 'Join as a Buyer'}
         </h1>
         <p className="text-gray-500">Enter your details to create an account.</p>
       </div>
@@ -104,7 +122,7 @@ export default function CustomSignUpForm({ role }: CustomSignUpFormProps) {
       )}
 
       {!verifying ? (
-        <form onSubmit={handleSubmit(onSignUp)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSignUpWithRole)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" {...register('email')} placeholder="hello@example.com" />
@@ -137,4 +155,4 @@ export default function CustomSignUpForm({ role }: CustomSignUpFormProps) {
       )}
     </div>
   );
-}
+}   
