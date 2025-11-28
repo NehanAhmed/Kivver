@@ -1,24 +1,27 @@
 import { NextResponse } from 'next/server';
-import { checkDatabaseConnection } from '@/lib/db';
-import { getUserByClerkId } from '@/lib/db/queries';
+import { db } from '@/lib/db';
+import { users } from '@/lib/db/schema';
 
 export async function GET() {
-    try {
-        // Test connection
-        const isConnected = await checkDatabaseConnection();
-
-        if (!isConnected) {
-            return NextResponse.json({ error: 'Database connection failed' }, { status: 500 });
-        }
-
-        return NextResponse.json({
-            success: true,
-            message: 'Database connected successfully!'
-        });
-    } catch (error) {
-        return NextResponse.json({
-            error: 'Database test failed',
-            details: error instanceof Error ? error.message : 'Unknown error'
-        }, { status: 500 });
-    }
+  try {
+    console.log('🔍 Testing database...');
+    
+    const allUsers = await db.select().from(users);
+    
+    console.log('✅ Database works! Users:', allUsers.length);
+    
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Database connected!',
+      userCount: allUsers.length,
+      users: allUsers
+    });
+  } catch (error) {
+    console.error('❌ Database test failed:', error);
+    
+    return NextResponse.json({ 
+      error: 'Database failed', 
+      details: error instanceof Error ? error.message : 'Unknown' 
+    }, { status: 500 });
+  }
 }
