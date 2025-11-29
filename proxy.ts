@@ -1,4 +1,4 @@
-// proxy.ts
+// middleware.ts
 import { clerkMiddleware, createRouteMatcher, clerkClient } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
@@ -24,6 +24,11 @@ const isAuthPage = createRouteMatcher([
   '/for-sellers/join(.*)',
 ]);
 
+const isOnboardingRoute = createRouteMatcher([
+  '/onboarding(.*)',
+  '/seller/onboarding(.*)',
+]);
+
 const isSellerRoute = createRouteMatcher([
   '/seller(.*)',
   '/teacher(.*)',
@@ -34,7 +39,12 @@ const isDashboardRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId, redirectToSignIn } = await auth();
+  const { userId, sessionClaims, redirectToSignIn } = await auth();
+
+  // Allow onboarding routes for authenticated users
+  if (userId && isOnboardingRoute(req)) {
+    return NextResponse.next();
+  }
 
   // If no user and route is protected → redirect to sign in
   if (!userId && !isPublicRoute(req)) {
@@ -48,6 +58,18 @@ export default clerkMiddleware(async (auth, req) => {
     const backend = await clerkClient();
     const user = await backend.users.getUser(userId);
     role = user.unsafeMetadata?.role as string | undefined;
+
+    // Check if onboarding is incomplete
+    const onboardingComplete = sessionClaims?.metadata?.onboardingComplete;
+
+    if (!onboardingComplete) {
+      // Redirect to appropriate onboarding page based on role
+      const onboardingUrl = role === 'seller' 
+        ? new URL('/seller/onboarding', req.url)
+        : new URL('/onboarding', req.url);
+      
+      return NextResponse.redirect(onboardingUrl);
+    }
   }
 
   // Redirect logged-in users away from auth pages
