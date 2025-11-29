@@ -42,17 +42,21 @@ const Header = () => {
 
                 {/* CTA Buttons */}
                 <div className="flex items-center gap-3">
-                    <Button
-                        variant="ghost"
-                        className="text-green-600 font-semibold hover:text-green-700 hover:bg-green-50 transition-all duration-200"
-                    >
-                        Sign In
-                    </Button>
-                    <Button
-                        className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
-                    >
-                        Get Started
-                    </Button>
+                    <Link href='/login'>
+                        <Button
+                            variant="ghost"
+                            className="text-green-600 font-semibold hover:text-green-700 hover:bg-green-50 transition-all duration-200"
+                        >
+                            Sign In
+                        </Button>
+                    </Link>
+                    <Link href='/join'>
+                        <Button
+                            className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
+                        >
+                            Get Started
+                        </Button>
+                    </Link>
                 </div>
             </nav>
         </header>
