@@ -13,7 +13,7 @@ import {
 // BUYER ONBOARDING PAGE
 // ============================================
 
-const BuyerOnboardingPage = () => {
+export const BuyerOnboardingPage = () => {
   const [isSubmitting] = React.useState(false);
   const [error] = React.useState('');
 

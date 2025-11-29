@@ -9,7 +9,7 @@ import {
     ArrowRight
 } from 'lucide-react';
 import React from 'react';
-const SellerOnboardingPage = () => {
+export const SellerOnboardingPage = () => {
     const [isSubmitting] = React.useState(false);
     const [error] = React.useState('');
     const [bioLength] = React.useState(0);
