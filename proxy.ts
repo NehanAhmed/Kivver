@@ -1,27 +1,32 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+// middleware.ts
+import { clerkMiddleware, createRouteMatcher, clerkClient } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
 const isPublicRoute = createRouteMatcher([
-  '/login(.*)', 
-  '/join(.*)', 
-  '/for-sellers/login(.*)', 
+  '/login(.*)',
+  '/join(.*)',
+  '/for-sellers/login(.*)',
   '/for-sellers/join(.*)',
   '/',
   '/pricing',
   '/explore',
   '/features',
   '/for-teachers',
-  '/api/webhooks(.*)', // Allow webhook endpoint
+  '/api/webhooks(.*)',
 ]);
 
-// Pages that logged-in users should NOT access
 const isAuthPage = createRouteMatcher([
   '/login(.*)',
   '/signup(.*)',
   '/join(.*)',
   '/auth(.*)',
   '/for-sellers/login(.*)',
-  '/for-sellers/join(.*)'
+  '/for-sellers/join(.*)',
+]);
+
+const isOnboardingRoute = createRouteMatcher([
+  '/onboarding(.*)',
+  '/seller/onboarding(.*)',
 ]);
 
 const isSellerRoute = createRouteMatcher([
@@ -34,34 +39,52 @@ const isDashboardRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId, sessionClaims } = await auth();
-  
-  // Get role from unsafe_metadata (set during signup)
-  const role = (sessionClaims?.unsafeMetadata as { role?: string })?.role;
+  const { userId, sessionClaims, redirectToSignIn } = await auth();
 
-  // 1. Redirect logged-in users away from auth pages to their correct dashboard
+  // Allow onboarding routes for authenticated users
+  if (userId && isOnboardingRoute(req)) {
+    return NextResponse.next();
+  }
+
+  // If no user and route is protected → redirect to sign in
+  if (!userId && !isPublicRoute(req)) {
+    return redirectToSignIn();
+  }
+
+  let role: string | undefined = undefined;
+
+  if (userId) {
+    // fetch full user object including unsafeMetadata
+    const backend = await clerkClient();
+    const user = await backend.users.getUser(userId);
+    role = user.unsafeMetadata?.role as string | undefined;
+
+    // Check if onboarding is incomplete
+    const onboardingComplete = sessionClaims?.metadata?.onboardingComplete;
+
+    if (!onboardingComplete) {
+      // Redirect to appropriate onboarding page based on role
+      const onboardingUrl = role === 'seller' 
+        ? new URL('/seller/onboarding', req.url)
+        : new URL('/onboarding', req.url);
+      
+      return NextResponse.redirect(onboardingUrl);
+    }
+  }
+
+  // Redirect logged-in users away from auth pages
   if (userId && isAuthPage(req)) {
     if (role === 'seller') {
       return NextResponse.redirect(new URL('/seller/dashboard', req.url));
     }
-    // Default to user dashboard
     return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
-  // 2. Protect private routes - redirect to login if not authenticated
-  if (!userId && !isPublicRoute(req)) {
-    return (await auth()).redirectToSignIn();
-  }
-
-  // 3. Role-based route protection
+  // Role-based route protection
   if (userId) {
-    // Prevent users from accessing seller routes
     if (isSellerRoute(req) && role !== 'seller') {
       return NextResponse.redirect(new URL('/dashboard', req.url));
     }
-
-    // Prevent sellers from accessing user dashboard (optional)
-    // Remove this block if sellers should access both dashboards
     if (isDashboardRoute(req) && role === 'seller') {
       return NextResponse.redirect(new URL('/seller/dashboard', req.url));
     }
