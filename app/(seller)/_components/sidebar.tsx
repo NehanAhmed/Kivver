@@ -2,20 +2,21 @@
 // SIDEBAR COMPONENT
 // ============================================
 'use client'
-import { 
-  BarChart3, 
-  BookOpen, 
-  ChevronLeft, 
-  ChevronRight, 
-  FileQuestion, 
-  FolderOpen, 
-  HelpCircle, 
-  Home, 
-  PenTool, 
-  PlusCircle, 
-  Settings, 
-  Users 
+import {
+  BarChart3,
+  BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  FileQuestion,
+  FolderOpen,
+  HelpCircle,
+  Home,
+  PenTool,
+  PlusCircle,
+  Settings,
+  Users
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 interface SidebarProps {
@@ -39,11 +40,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const [activeItem, setActiveItem] = useState('dashboard');
 
   const mainNavItems: NavItem[] = [
-    { icon: Home, label: 'Dashboard', href: 'dashboard' },
-    { icon: BookOpen, label: 'My Courses', href: 'courses' },
-    { icon: PlusCircle, label: 'Create Course', href: 'create' },
-    { icon: PenTool, label: 'Lesson Builder', href: 'lessons' },
-    { icon: BarChart3, label: 'Analytics', href: 'analytics' },
+    { icon: Home, label: 'Dashboard', href: '/seller/dashboard' },
+    { icon: BookOpen, label: 'My Courses', href: '/seller/dashboard/course' },
+    { icon: PlusCircle, label: 'Create Course', href: '/seller/dashboard/create-course' },
+    { icon: PenTool, label: 'Lesson Builder', href: '/seller/dashboard/lessons' },
+    { icon: BarChart3, label: 'Analytics', href: '/seller/dashboard/analytics' },
     { icon: Users, label: 'Students', href: 'students' },
     { icon: FileQuestion, label: 'Quiz Manager', href: 'quizzes' },
     { icon: FolderOpen, label: 'Content Library', href: 'library' },
@@ -59,29 +60,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
     const isActive = activeItem === item.href;
 
     return (
-      <button
-        key={item.href}
-        onClick={() => setActiveItem(item.href)}
-        className={`
+      <Link  href={item.href} key={item.label}>
+        <button
+          key={item.href}
+          onClick={() => setActiveItem(item.href)}
+          className={`
           w-full flex items-center gap-3 px-3 py-3 rounded-xl
           transition-all duration-200
           ${isActive
-            ? 'bg-green-50 text-green-600 shadow-sm'
-            : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-          }
+              ? 'bg-green-50 text-green-600 shadow-sm'
+              : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+            }
           ${collapsed ? 'justify-center' : ''}
         `}
-      >
-        <Icon className={`${collapsed ? 'w-6 h-6' : 'w-5 h-5'} flex-shrink-0`} />
-        {!collapsed && (
-          <span className="font-medium text-sm">{item.label}</span>
-        )}
-        {!collapsed && item.badge && (
-          <span className="ml-auto bg-green-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
-            {item.badge}
-          </span>
-        )}
-      </button>
+        >
+          <Icon className={`${collapsed ? 'w-6 h-6' : 'w-5 h-5'} flex-shrink-0`} />
+          {!collapsed && (
+            <span className="font-medium text-sm">{item.label}</span>
+          )}
+          {!collapsed && item.badge && (
+            <span className="ml-auto bg-green-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+              {item.badge}
+            </span>
+          )}
+        </button>
+      </Link>
     );
   };
 
