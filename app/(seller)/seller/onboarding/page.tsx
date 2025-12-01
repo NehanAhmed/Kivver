@@ -9,7 +9,7 @@ import {
     ArrowRight
 } from 'lucide-react';
 import React from 'react';
-export const SellerOnboardingPage = () => {
+const SellerOnboardingPage = () => {
     const [isSubmitting] = React.useState(false);
     const [error] = React.useState('');
     const [bioLength] = React.useState(0);
@@ -231,3 +231,5 @@ export const SellerOnboardingPage = () => {
         </div>
     );
 };
+
+export default SellerOnboardingPage 

@@ -1,8 +1,8 @@
 import React from 'react';
-import { 
-  User, 
-  BookOpen, 
-  Sparkles, 
+import {
+  User,
+  BookOpen,
+  Sparkles,
   GraduationCap,
   Loader2,
   CheckCircle2,
@@ -13,7 +13,7 @@ import {
 // BUYER ONBOARDING PAGE
 // ============================================
 
-export  const BuyerOnboardingPage = () => {
+const BuyerOnboardingPage = () => {
   const [isSubmitting] = React.useState(false);
   const [error] = React.useState('');
 
@@ -29,14 +29,14 @@ export  const BuyerOnboardingPage = () => {
         <div className="bg-card border border-border rounded-3xl shadow-2xl overflow-hidden">
           {/* Top Accent Bar */}
           <div className="h-2 bg-gradient-to-r from-green-500 via-green-600 to-green-500" />
-          
+
           <div className="p-8 sm:p-12">
             {/* Header Section */}
             <div className="text-center mb-10">
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-green-50 dark:bg-green-900/20 mb-6 shadow-md">
                 <BookOpen className="w-10 h-10 text-green-600" />
               </div>
-              
+
               <h1 className="text-4xl font-bold text-foreground mb-3">
                 Welcome Aboard! 🎓
               </h1>
@@ -178,3 +178,4 @@ export  const BuyerOnboardingPage = () => {
     </div>
   );
 };
+export default BuyerOnboardingPage
