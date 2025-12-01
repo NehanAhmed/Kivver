@@ -2,24 +2,9 @@
 import { Button } from '@/components/ui/button';
 import { BookOpen, Plus } from 'lucide-react';
 import { CourseCard } from './CourseCards';
+import { Course } from '@/types/database';
 
 // TODO: Replace with actual type from your schema
-interface Course {
-  id: number;
-  title: string;
-  description: string | null;
-  thumbnail: string | null;
-  category: string | null;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  price: string;
-  isPremium: boolean;
-  status: 'draft' | 'pending' | 'approved' | 'rejected';
-  totalLessons: number;
-  totalDuration: number;
-  enrollmentCount: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
 
 export function CourseGrid() {
   // TODO: Replace with actual data from API
