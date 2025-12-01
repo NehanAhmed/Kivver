@@ -2,7 +2,7 @@
 // SITE HEADER COMPONENT
 // ============================================
 'use client'
-import { ModeToggle, ThemeToggle } from "@/components/ThemeToggle";
+import { ModeToggle } from "@/components/ThemeToggle";
 import { Bell, LogOut, Moon, Search, Settings, Sun, User } from "lucide-react";
 import { useState } from "react";
 
