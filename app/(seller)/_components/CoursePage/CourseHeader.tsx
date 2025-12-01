@@ -23,14 +23,12 @@ export function CourseHeader() {
           <Download className="w-4 h-4 mr-2" />
           Export
         </Button>
-        <Link href='create-course'>
-          <Button
-            className="btn-primary"
-          >
+        <Button asChild className="btn-primary">
+          <Link href="create-course">
             <Plus className="w-4 h-4 mr-2" />
             Create Course
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     </div>
   );
