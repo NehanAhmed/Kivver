@@ -13,6 +13,8 @@ const isPublicRoute = createRouteMatcher([
   '/features',
   '/for-teachers',
   '/api/webhooks(.*)',
+  '/api/course(.*)',
+  '/api/lesson(.*)',
 ]);
 
 const isAuthPage = createRouteMatcher([

@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   if (!WEBHOOK_SECRET) {
     console.error('❌ CLERK_WEBHOOK_SECRET is missing in environment variables');
     return NextResponse.json(
-      { error: 'Webhook secret not configured' }, 
+      { error: 'Webhook secret not configured' },
       { status: 500 }
     );
   }
@@ -27,16 +27,16 @@ export async function POST(req: Request) {
   const svix_timestamp = headerPayload.get('svix-timestamp');
   const svix_signature = headerPayload.get('svix-signature');
 
-  console.log('📋 Svix Headers:', { 
-    svix_id: svix_id ? '✓' : '✗', 
-    svix_timestamp: svix_timestamp ? '✓' : '✗', 
-    svix_signature: svix_signature ? '✓' : '✗' 
+  console.log('📋 Svix Headers:', {
+    svix_id: svix_id ? '✓' : '✗',
+    svix_timestamp: svix_timestamp ? '✓' : '✗',
+    svix_signature: svix_signature ? '✓' : '✗'
   });
 
   if (!svix_id || !svix_timestamp || !svix_signature) {
     console.error('❌ Missing required svix headers');
     return NextResponse.json(
-      { error: 'Missing svix headers' }, 
+      { error: 'Missing svix headers' },
       { status: 400 }
     );
   }
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error('❌ Failed to parse JSON payload:', error);
     return NextResponse.json(
-      { error: 'Invalid JSON payload' }, 
+      { error: 'Invalid JSON payload' },
       { status: 400 }
     );
   }
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error('❌ Webhook verification failed:', err);
     return NextResponse.json(
-      { error: 'Webhook verification failed' }, 
+      { error: 'Webhook verification failed' },
       { status: 400 }
     );
   }
@@ -82,10 +82,10 @@ export async function POST(req: Request) {
     if (eventType === 'user.created') {
       const { id, email_addresses, first_name, last_name, image_url, unsafe_metadata } = evt.data;
 
-      console.log('👤 User data:', { 
-        id, 
+      console.log('👤 User data:', {
+        id,
         email: email_addresses[0]?.email_address,
-        role: (unsafe_metadata as any)?.role 
+        role: (unsafe_metadata as any)?.role
       });
 
       const role = (unsafe_metadata as { role?: 'buyer' | 'seller' })?.role || 'buyer';
@@ -100,6 +100,11 @@ export async function POST(req: Request) {
       }).returning();
 
       console.log(`✅ User created in database:`, newUser);
+      if (newUser.role === 'seller') {
+
+        localStorage.setItem('seller_id', `${newUser.id}`)
+      }
+      localStorage.setItem('buyer_id', `${newUser.id}`)
     }
 
     if (eventType === 'user.updated') {
@@ -142,7 +147,7 @@ export async function POST(req: Request) {
 
   } catch (error) {
     console.error('❌ Database error:', error);
-    
+
     if (error instanceof Error) {
       console.error('Error details:', {
         message: error.message,
@@ -151,10 +156,10 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(
-      { 
+      {
         error: 'Internal server error',
         details: error instanceof Error ? error.message : 'Unknown error'
-      }, 
+      },
       { status: 500 }
     );
   }

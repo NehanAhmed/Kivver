@@ -24,71 +24,71 @@ export const users = pgTable('users', {
 });
 
 // ==================== COURSES TABLE ====================
-export const courses = pgTable('courses', {
-  id: serial('id').primaryKey(),
-  sellerId: integer('seller_id').notNull().references(() => users.id),
-  
-  title: text('title').notNull(),
-  description: text('description'),
-  thumbnail: text('thumbnail'),
-  category: text('category'),
-  difficulty: text('difficulty', { enum: ['beginner', 'intermediate', 'advanced'] }).default('beginner'),
-  
-  // Pricing
-  price: numeric('price', { precision: 10, scale: 2 }).notNull().default('0'),
-  isPremium: boolean('is_premium').notNull().default(false),
-  
-  // Admin approval
-  status: text('status', { enum: ['draft', 'pending', 'approved', 'rejected'] }).notNull().default('draft'),
-  
-  // Stats
-  totalLessons: integer('total_lessons').notNull().default(0),
-  totalDuration: integer('total_duration').notNull().default(0), // in minutes
-  enrollmentCount: integer('enrollment_count').notNull().default(0),
-  
-  // Timestamps
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-  deletedAt: timestamp('deleted_at'),
-});
+  export const courses = pgTable('courses', {
+    id: serial('id').primaryKey(),
+    sellerId: integer('seller_id').notNull().references(() => users.id),
+    
+    title: text('title').notNull(),
+    description: text('description'),
+    thumbnail: text('thumbnail'),
+    category: text('category'),
+    difficulty: text('difficulty', { enum: ['beginner', 'intermediate', 'advanced'] }).default('beginner'),
+    
+    // Pricing
+    price: numeric('price', { precision: 10, scale: 2 }).notNull().default('0'),
+    isPremium: boolean('is_premium').notNull().default(false),
+    
+    // Admin approval
+    status: text('status', { enum: ['draft', 'pending', 'approved', 'rejected'] }).notNull().default('draft'),
+    
+    // Stats
+    totalLessons: integer('total_lessons').notNull().default(0),
+    totalDuration: integer('total_duration').notNull().default(0), // in minutes
+    enrollmentCount: integer('enrollment_count').notNull().default(0),
+    
+    // Timestamps
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    deletedAt: timestamp('deleted_at'),
+  });
 
-// ==================== LESSONS TABLE ====================
-export const lessons = pgTable('lessons', {
-  id: serial('id').primaryKey(),
-  courseId: integer('course_id').notNull().references(() => courses.id, { onDelete: 'cascade' }),
-  
-  title: text('title').notNull(),
-  description: text('description'),
-  order: integer('order').notNull(), // Lesson sequence
-  
-  // Duration in seconds
-  duration: integer('duration').notNull().default(0),
-  
-  // Status
-  isPublished: boolean('is_published').notNull().default(false),
-  
-  // Timestamps
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-});
+  // ==================== LESSONS TABLE ====================
+  export const lessons = pgTable('lessons', {
+    id: serial('id').primaryKey(),
+    courseId: integer('course_id').notNull().references(() => courses.id, { onDelete: 'cascade' }),
+    
+    title: text('title').notNull(),
+    description: text('description'),
+    order: integer('order').notNull(), // Lesson sequence
+    
+    // Duration in seconds
+    duration: integer('duration').notNull().default(0),
+    
+    // Status
+    isPublished: boolean('is_published').notNull().default(false),
+    
+    // Timestamps
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  });
 
-// ==================== LESSON CONTENT TABLE ====================
-export const lessonContent = pgTable('lesson_content', {
-  id: serial('id').primaryKey(),
-  lessonId: integer('lesson_id').notNull().references(() => lessons.id, { onDelete: 'cascade' }),
-  
-  type: text('type', { enum: ['text', 'video', 'quiz'] }).notNull(),
-  order: integer('order').notNull(),
-  
-  // Content based on type
-  textContent: text('text_content'), // For type='text'
-  videoUrl: text('video_url'), // For type='video'
-  quizData: jsonb('quiz_data'), // For type='quiz' - stores questions, options, answers
-  
-  // Timestamps
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-});
+  // ==================== LESSON CONTENT TABLE ====================
+  export const lessonContent = pgTable('lesson_content', {
+    id: serial('id').primaryKey(),
+    lessonId: integer('lesson_id').notNull().references(() => lessons.id, { onDelete: 'cascade' }),
+    
+    type: text('type', { enum: ['text', 'video', 'quiz'] }).notNull(),
+    order: integer('order').notNull(),
+    
+    // Content based on type
+    textContent: text('text_content'), // For type='text'
+    videoUrl: text('video_url'), // For type='video'
+    quizData: jsonb('quiz_data'), // For type='quiz' - stores questions, options, answers
+    
+    // Timestamps
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  });
 
 // ==================== USER ENROLLMENTS ====================
 export const enrollments = pgTable('enrollments', {
