@@ -48,12 +48,10 @@ export default async function CourseViewPage({ params }: { params: Promise<{ id:
             <div className="max-w-7xl mx-auto px-6 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
                     {/* Left Section - Lessons */}
-                    <div className="bg-card border border-border rounded-2xl shadow-sm min-h-[500px]">
-                        {course.totalLessons === 0 ? (
-                            <LessonsEmptyState id={course.id} />
-                        ) : (
-                            <LessonsList lessons={lessons} courseId={courseId} />
-                        )}
+                    <div className="p-5 bg-card border border-border rounded-2xl shadow-sm min-h-[500px]">
+
+                        <LessonsList lessons={lessons} courseId={courseId} />
+
                     </div>
 
                     {/* Right Section - Actions Panel */}

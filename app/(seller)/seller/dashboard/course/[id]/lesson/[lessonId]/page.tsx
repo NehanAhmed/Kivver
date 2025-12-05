@@ -16,8 +16,6 @@ interface Lesson {
   updatedAt: Date;
 }
 
-
-
 export default async function LessonViewPage({
   params,
 }: {
@@ -33,11 +31,11 @@ export default async function LessonViewPage({
 
       {/* Bottom Half - Lesson Content Section */}
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <LessonContentWrapper lessonId={parseInt(lessonId)} />
+        <LessonContentWrapper 
+          lessonId={parseInt(lessonId)} 
+          courseId={parseInt(courseId)} 
+        />
       </div>
     </div>
   );
 }
-
-
-

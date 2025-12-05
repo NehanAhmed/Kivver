@@ -33,19 +33,20 @@ const Header = async () => {
 
                 {/* Navigation Links */}
                 <div className="hidden md:flex items-center gap-10">
+                    {isAuthenticated && user?.unsafeMetadata.role === "buyer" ? (
+                        <Link
+
+                            href='/my-learning'
+                            className="text-gray-700 text-base font-medium hover:text-green-600 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-green-600 after:transition-all after:duration-200 hover:after:w-full"
+                        >
+                            My Learning
+                        </Link>
+                    ) : (
+                        null
+                    )}
                     {NavLinks.map((val) => (
                         <div key={val.id}>
-                            {isAuthenticated && user?.unsafeMetadata.role === "buyer" ? (
-                                <Link
-                                    
-                                    href='/my-learning'
-                                    className="text-gray-700 text-base font-medium hover:text-green-600 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-green-600 after:transition-all after:duration-200 hover:after:w-full"
-                                >
-                                    My Learning
-                                </Link>
-                            ) : (
-                                null
-                            )}
+
                             <Link
                                 key={val.id}
                                 href={val.href}

@@ -53,14 +53,16 @@ export function LessonCard({ lesson, onEdit, onDelete }: LessonCardProps) {
         {/* Lesson Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start gap-2">
-            <h3 className="font-semibold text-foreground text-base truncate flex-1">
-              {lesson.title}
-            </h3>
+            <Link href={`/seller/dashboard/course/${lesson.courseId}/lesson/${lesson.id}`}>
+              <h3 className="font-semibold text-foreground text-base truncate flex-1">
+                {lesson.title}
+              </h3>            </Link>
+
             <Badge
               variant={lesson.isPublished ? 'default' : 'secondary'}
               className={`flex-shrink-0 ${lesson.isPublished
-                  ? 'bg-green-500/10 text-green-700 hover:bg-green-500/20'
-                  : 'bg-muted text-muted-foreground'
+                ? 'bg-green-500/10 text-green-700 hover:bg-green-500/20'
+                : 'bg-muted text-muted-foreground'
                 }`}
             >
               {lesson.isPublished ? (

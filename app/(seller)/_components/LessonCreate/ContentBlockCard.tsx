@@ -1,33 +1,25 @@
 // components/seller/lesson-create/ContentBlockCard.tsx
-import { GripVertical, Trash2, FileText, Video, HelpCircle, ChevronRight } from 'lucide-react';
+import { GripVertical, Trash2, FileText, Video, HelpCircle, ChevronRight, Edit2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-
-interface ContentBlock {
-  id: string;
-  type: 'text' | 'video' | 'quiz';
-  order: number;
-  textContent?: string;
-  videoUrl?: string;
-  quizData?: {
-    questions: Array<{
-      id: string;
-      question: string;
-      options: Array<{ id: string; text: string }>;
-      correctAnswerId: string;
-    }>;
-  };
-}
+import { ContentBlock } from '../LessonView/lesson-content-type';
 
 interface ContentBlockCardProps {
   block: ContentBlock;
-  onDelete: (blockId: string) => void;
   isActive?: boolean;
+  onEdit: () => void;
+  onDelete: (blockId: string) => void;
 }
 
-export function ContentBlockCard({ block, onDelete, isActive = false }: ContentBlockCardProps) {
+export function ContentBlockCard({ 
+  block, 
+  isActive = false, 
+  onEdit, 
+  onDelete 
+}: ContentBlockCardProps) {
+  
   const getBlockConfig = () => {
     switch (block.type) {
       case 'text':
@@ -93,6 +85,7 @@ export function ContentBlockCard({ block, onDelete, isActive = false }: ContentB
 
   return (
     <Card
+      onClick={onEdit}
       className={cn(
         'border rounded-xl p-4 transition-all duration-200 cursor-pointer group hover:shadow-lg',
         config.bgColor,
@@ -103,6 +96,7 @@ export function ContentBlockCard({ block, onDelete, isActive = false }: ContentB
       <div className="flex items-center gap-4">
         {/* Drag Handle */}
         <button
+          onClick={(e) => e.stopPropagation()}
           className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors"
           title="Drag to reorder"
         >
@@ -110,7 +104,7 @@ export function ContentBlockCard({ block, onDelete, isActive = false }: ContentB
         </button>
 
         {/* Icon Container */}
-        <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center shadow-sm', config.iconBg)}>
+        <div className={cn('w-11 h-11 rounded-xl flex items-center justify-center shadow-sm', config.iconBg)}>
           <Icon className="w-5 h-5 text-white" />
         </div>
 
@@ -130,11 +124,20 @@ export function ContentBlockCard({ block, onDelete, isActive = false }: ContentB
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-1">
-          {/* Edit Indicator */}
-          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-            <ChevronRight className="w-5 h-5 text-muted-foreground" />
-          </div>
+        <div className="flex items-center gap-2">
+          {/* Edit Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit();
+            }}
+            className="rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background/80"
+            title="Edit block"
+          >
+            <Edit2 className="w-4 h-4" />
+          </Button>
 
           {/* Delete Button */}
           <Button
@@ -152,12 +155,12 @@ export function ContentBlockCard({ block, onDelete, isActive = false }: ContentB
         </div>
       </div>
 
-      {/* Progress Indicator - Optional */}
+      {/* Active Indicator */}
       {isActive && (
         <div className="mt-3 pt-3 border-t border-border">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span>Currently editing</span>
+            <span className="font-medium">Currently editing</span>
           </div>
         </div>
       )}

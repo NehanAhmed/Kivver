@@ -1,6 +1,6 @@
-// middleware.ts
 import { clerkMiddleware, createRouteMatcher, clerkClient } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
+import { ClerkUserMetadata } from './app/(seller)/seller/onboarding/onboarding_type';
 
 const isPublicRoute = createRouteMatcher([
   '/login(.*)',
@@ -53,18 +53,39 @@ export default clerkMiddleware(async (auth, req) => {
     return redirectToSignIn();
   }
 
-  let role: string | undefined = undefined;
+  let role: 'buyer' | 'seller' | undefined = undefined;
+  let onboardingComplete = false;
 
   if (userId) {
-    // fetch full user object including unsafeMetadata
-    const backend = await clerkClient();
-    const user = await backend.users.getUser(userId);
-    role = user.unsafeMetadata?.role as string | undefined;
+    // Get metadata from sessionClaims first (faster, already available)
+    const metadata = sessionClaims?.metadata as ClerkUserMetadata | undefined;
+    
+    role = metadata?.role;
+    onboardingComplete = metadata?.onboardingComplete ?? false;
+
+    // If metadata is missing from session, fetch from Clerk backend
+    if (!role) {
+      try {
+        const backend = await clerkClient();
+        const user = await backend.users.getUser(userId);
+        const publicMetadata = user.publicMetadata as ClerkUserMetadata;
+        
+        role = publicMetadata.role;
+        onboardingComplete = publicMetadata.onboardingComplete ?? false;
+      } catch (error) {
+        console.error('[MIDDLEWARE] Failed to fetch user metadata:', error);
+        // Default to buyer if we can't determine role
+        role = 'buyer';
+      }
+    }
 
     // Check if onboarding is incomplete
-    const onboardingComplete = sessionClaims?.metadata?.onboardingComplete;
-
     if (!onboardingComplete) {
+      // Don't redirect if already on onboarding page
+      if (isOnboardingRoute(req)) {
+        return NextResponse.next();
+      }
+
       // Redirect to appropriate onboarding page based on role
       const onboardingUrl = role === 'seller' 
         ? new URL('/seller/onboarding', req.url)
@@ -83,7 +104,7 @@ export default clerkMiddleware(async (auth, req) => {
   }
 
   // Role-based route protection
-  if (userId) {
+  if (userId && onboardingComplete) {
     if (isSellerRoute(req) && role !== 'seller') {
       return NextResponse.redirect(new URL('/dashboard', req.url));
     }

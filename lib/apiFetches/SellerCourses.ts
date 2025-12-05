@@ -134,13 +134,7 @@ export interface FetchLessonsResponse {
 
 export async function fetchLessonsByCourseId(courseId: number): Promise<Lesson[]> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/lesson/${courseId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store', // For server-side fetching with fresh data
-    });
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/lesson/${courseId}`);
 
     if (!response.ok) {
       const error = await response.json();

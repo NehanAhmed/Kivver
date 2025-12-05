@@ -18,7 +18,7 @@ export default function CreateCoursePage() {
         
         {/* Form Content */}
         <div className="mt-8">
-          <CourseForm sellerId={5} />
+          <CourseForm sellerId={18} />
         </div>
       </div>
     </div>

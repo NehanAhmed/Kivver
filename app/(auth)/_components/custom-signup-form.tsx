@@ -43,7 +43,7 @@ export default function CustomSignUpForm({ role }: CustomSignUpFormProps) {
       await signUp.create({
         emailAddress: data.email,
         password: data.password,
-        unsafeMetadata: { role: role }, 
+        unsafeMetadata: { role },
       });
 
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });

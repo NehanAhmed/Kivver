@@ -42,12 +42,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
   const mainNavItems: NavItem[] = [
     { icon: Home, label: 'Dashboard', href: '/seller/dashboard' },
     { icon: BookOpen, label: 'My Courses', href: '/seller/dashboard/course' },
-    { icon: PlusCircle, label: 'Create Course', href: '/seller/dashboard/create-course' },
-    { icon: PenTool, label: 'Lesson Builder', href: '/seller/dashboard/lessons' },
     { icon: BarChart3, label: 'Analytics', href: '/seller/dashboard/analytics' },
     { icon: Users, label: 'Students', href: 'students' },
-    { icon: FileQuestion, label: 'Quiz Manager', href: 'quizzes' },
-    { icon: FolderOpen, label: 'Content Library', href: 'library' },
   ];
 
   const bottomNavItems: NavItem[] = [
