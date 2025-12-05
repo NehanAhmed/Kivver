@@ -3,13 +3,13 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, Plus } from 'lucide-react';
 import { CourseCard } from './CourseCards';
 import { Course } from '@/types/database';
+import Link from 'next/link';
 
 // TODO: Replace with actual type from your schema
 
-export function CourseGrid() {
-  // TODO: Replace with actual data from API
-  const courses: Course[] = [];
-  
+export function CourseGrid({ courses }: { courses: Course[] }) {
+
+
   if (courses.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4">
@@ -29,11 +29,11 @@ export function CourseGrid() {
       </div>
     );
   }
-  
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {courses.map((course) => (
-        <CourseCard key={course.id} course={course} />
+          <CourseCard key={course.id} course={course} />
       ))}
     </div>
   );

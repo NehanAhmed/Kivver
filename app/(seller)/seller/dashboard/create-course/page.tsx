@@ -1,10 +1,12 @@
 'use client'
 import { CourseForm } from '@/app/(seller)/_components/CreateCourse/CourseForm';
 import { CourseHeader } from '@/app/(seller)/_components/CreateCourse/CourseHeader';
+import { useUser } from '@clerk/nextjs';
 import React, { useState } from 'react';
 
 // Main Page Component
 export default function CreateCoursePage() {
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-5xl">
@@ -16,7 +18,7 @@ export default function CreateCoursePage() {
         
         {/* Form Content */}
         <div className="mt-8">
-          <CourseForm />
+          <CourseForm sellerId={18} />
         </div>
       </div>
     </div>
