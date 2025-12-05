@@ -32,7 +32,7 @@ export function CourseHeader({ course }: CourseHeaderProps) {
       intermediate: 'bg-purple-100 text-purple-600',
       advanced: 'bg-orange-100 text-orange-600',
     };
-    return colors[difficulty];
+    return difficulty ? colors[difficulty] : 'bg-gray-100 text-gray-600';
   };
 
   const formatDuration = (minutes: number) => {
