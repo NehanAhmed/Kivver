@@ -11,6 +11,7 @@ const isPublicRoute = createRouteMatcher([
   '/pricing',
   '/explore',
   '/features',
+  '/courses(.*)',
   '/for-teachers',
   '/api/webhooks(.*)',
   '/api/course(.*)',

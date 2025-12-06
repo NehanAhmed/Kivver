@@ -10,7 +10,7 @@ export type Course = InferSelectModel<typeof schema.courses>;
 export type NewCourse = InferInsertModel<typeof schema.courses>;
 
 // Lesson types
-export type Lesson = InferSelectModel<typeof schema.lessons>;
+export type Lesson = InferSelectModel<typeof schema.le  ssons>;
 export type NewLesson = InferInsertModel<typeof schema.lessons>;
 
 // Lesson Content types

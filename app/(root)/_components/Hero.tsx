@@ -63,9 +63,9 @@ export function Hero() {
                                 size="lg"
                                 variant="outline"
                                 onClick={() => setIsVideoOpen(true)}
-                                className="border-2 border-green-500 text-green-600 hover:bg-green-50 font-semibold text-base px-8 py-6 rounded-xl transition-all duration-200 w-full sm:w-auto group"
+                                className="border-1 border-neutral-600 hover:text-green-500 text-green-600  font-semibold  px-8 py-6 rounded-xl transition-all duration-200 w-full sm:w-auto "
                             >
-                                <Play className="w-5 h-5 mr-2 fill-current group-hover:scale-110 transition-transform" />
+                                <Play className="w-5 h-5 mr-2 fill-current  transition-transform" />
                                 Watch Demo
                             </Button>
                         </div>

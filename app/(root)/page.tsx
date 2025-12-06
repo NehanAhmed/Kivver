@@ -4,16 +4,18 @@ import { Features } from "./_components/Features";
 import { HowItWorks } from "./_components/HowItWorks";
 import { CTA } from "./_components/CTA";
 import { Footer } from "./_components/Footer";
-import FeaturedCourses from "./_components/FeaturedCourses";
+import { FeaturedCoursesSection } from "./_components/FeaturedCourses";
+import { fetchAllCourses } from "@/lib/apiFetches/SellerCourses";
 
 
-export default function App() {
+export default async function App() {
+  const courses = await fetchAllCourses();
   return (
     <div className="">
       <Hero />
       <Stats />
       <Features />
-      <FeaturedCourses />
+      <FeaturedCoursesSection courses={courses} />
       <HowItWorks />
       <CTA />
     </div>

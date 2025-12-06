@@ -23,9 +23,10 @@ interface LessonCardProps {
   lesson: Lesson;
   onEdit?: (lessonId: number) => void;
   onDelete?: (lessonId: number) => void;
+  isOnBuyerPage?: boolean;
 }
 
-export function LessonCard({ lesson, onEdit, onDelete }: LessonCardProps) {
+export function LessonCard({ lesson, onEdit, onDelete, isOnBuyerPage }: LessonCardProps) {
   // Format duration from seconds to mm:ss
   const formatDuration = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
@@ -53,10 +54,20 @@ export function LessonCard({ lesson, onEdit, onDelete }: LessonCardProps) {
         {/* Lesson Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start gap-2">
-            <Link href={`/seller/dashboard/course/${lesson.courseId}/lesson/${lesson.id}`}>
+            {isOnBuyerPage ? (
+              <Link href={`/courses/${lesson.courseId}/lesson/${lesson.id}`}>
               <h3 className="font-semibold text-foreground text-base truncate flex-1">
                 {lesson.title}
-              </h3>            </Link>
+              </h3>
+              </Link>
+            ) : (
+              <Link href={`/seller/dashboard/course/${lesson.courseId}/lesson/${lesson.id}`}>
+
+                <h3 className="font-semibold text-foreground text-base truncate flex-1">
+                  {lesson.title}
+                </h3>
+              </Link>
+            )}
 
             <Badge
               variant={lesson.isPublished ? 'default' : 'secondary'}
@@ -122,12 +133,13 @@ export function LessonCard({ lesson, onEdit, onDelete }: LessonCardProps) {
 interface LessonsListProps {
   courseId: number;
   lessons: Lesson[];
+  isOnBuyerPage?: boolean;
 }
 
-export function LessonsList({ courseId, lessons }: LessonsListProps) {
+export function LessonsList({ courseId, lessons, isOnBuyerPage }: LessonsListProps) {
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 border-4 border-dotted p-10 rounded-xl">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -141,15 +153,17 @@ export function LessonsList({ courseId, lessons }: LessonsListProps) {
             </p>
           </div>
         </div>
-        <Link href={`/seller/dashboard/course/${courseId}/lesson/create`}>
-          <Button
+        {isOnBuyerPage ? null : (
+          <Link href={`/seller/dashboard/course/${courseId}/lesson/create`}>
+            <Button
 
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Lesson
-          </Button>
-        </Link>
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Lesson
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Lessons List */}
@@ -166,6 +180,7 @@ export function LessonsList({ courseId, lessons }: LessonsListProps) {
               Start building your course by adding your first lesson. Each lesson can include
               videos, text content, and resources.
             </p>
+
             <Link href={`/seller/dashboard/course/${courseId}/lesson/create`}>
               <Button
                 onClick={() => console.log('Create first lesson')}
@@ -181,6 +196,7 @@ export function LessonsList({ courseId, lessons }: LessonsListProps) {
         <div className="space-y-3">
           {lessons.map((lesson) => (
             <LessonCard
+              isOnBuyerPage={isOnBuyerPage}
               key={lesson.id}
               lesson={lesson}
               onEdit={(id) => console.log('Edit lesson:', id)}

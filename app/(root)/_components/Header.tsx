@@ -1,3 +1,4 @@
+import { ModeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { ChevronRight } from 'lucide-react';
@@ -61,6 +62,7 @@ const Header = async () => {
 
                 {/* CTA Buttons */}
                 <div className="flex items-center gap-3">
+                    <ModeToggle />
                     {user?.unsafeMetadata.role === "seller" && isAuthenticated ? (
                         <>
                             <Link href="/seller/dashboard">

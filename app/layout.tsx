@@ -5,7 +5,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner"
 
-
 export const metadata: Metadata = {
   title: "Kivver - AI Powered Learning Platform",
   description: "Kivver is a AI powered Learning platform for Pakistani People to help them learn.",

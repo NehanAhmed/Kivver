@@ -1,12 +1,12 @@
-'use client'
-import React, { Suspense } from 'react';
 import { BookOpen, Trophy, Users, TrendingUp, Zap } from 'lucide-react';
 import { CategoryFilter } from '../_components/CategoryFilter';
 import { CourseGrid } from '../_components/CourseGrid';
 import { StatsCard } from '../_components/StatsCard';
 import { SearchBar } from '../_components/SearchBar';
+import { Course } from '@/types/database';
+import { fetchAllCourses } from '@/lib/apiFetches/SellerCourses';
 
-const ExplorePage = () => {
+const ExplorePage = async() => {
     const categories = [
         { id: 'all', label: 'All Courses', icon: BookOpen },
         { id: 'trending', label: 'Trending', icon: TrendingUp },
@@ -22,7 +22,8 @@ const ExplorePage = () => {
         { icon: Users, label: 'Active Learners', value: '125k', color: 'blue' as const },
         { icon: Trophy, label: 'Badges Earned', value: '2.3M', color: 'orange' as const },
     ];
-
+    const course: Course[] = await fetchAllCourses()
+    
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header Section */}
@@ -39,12 +40,12 @@ const ExplorePage = () => {
             {/* Main Content */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Category Filter with Suspense */}
+
+                {/* <CategoryFilter categories={categories} /> */}
                 
-                    <CategoryFilter categories={categories} />
-\
                 {/* Course Grid with Suspense */}
-               
-                    <CourseGrid />
+
+                <CourseGrid courseData={course} />
             </div>
         </div>
     );
